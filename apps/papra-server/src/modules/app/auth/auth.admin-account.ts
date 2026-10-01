@@ -27,37 +27,24 @@ export async function bootstrapAdminAccount({
   const normalizedEmail = email.toLowerCase();
   const usersRepository = createUsersRepository({ db });
   const rolesRepository = createRolesRepository({ db });
-  const { user: existingUser } = await usersRepository.getUserByEmail({ email: normalizedEmail });
-  let wasCreated = false;
+  const authContext = await auth.$context;
+  const hashedPassword = await authContext.password.hash(password);
 
-  if (!existingUser) {
-    const authContext = await auth.$context;
-    const hashedPassword = await authContext.password.hash(password);
-
-    try {
-      await authContext.internalAdapter.createOAuthUser(
-        {
-          email: normalizedEmail,
-          name,
-          emailVerified: true,
-        },
-        {
-          accountId: normalizedEmail,
-          providerId: 'credential',
-          password: hashedPassword,
-        },
-      );
-
-      wasCreated = true;
-    } catch (error) {
-      const { user: concurrentlyCreatedUser } = await usersRepository.getUserByEmail({
+  try {
+    await authContext.internalAdapter.createOAuthUser(
+      {
         email: normalizedEmail,
-      });
-
-      if (!concurrentlyCreatedUser) {
-        throw error;
-      }
-    }
+        name,
+        emailVerified: true,
+      },
+      {
+        accountId: normalizedEmail,
+        providerId: 'credential',
+        password: hashedPassword,
+      },
+    );
+  } catch (error) {
+    // If the user already exists, we can ignore the error and proceed to assign the admin role.
   }
 
   const { user } = await usersRepository.getUserByEmail({ email: normalizedEmail });
@@ -69,7 +56,7 @@ export async function bootstrapAdminAccount({
   await rolesRepository.assignRoleToUser({ userId: user.id, role: ROLES.ADMIN });
 
   logger.info(
-    { userId: user.id, email: user.email, wasCreated },
+    { userId: user.id, email: user.email},
     'Configured admin account ensured',
   );
 }
