@@ -5,7 +5,10 @@ import { loadConfig } from 'c12';
 import { defineConfig } from 'figue';
 import * as v from 'valibot';
 import { authConfig } from '../app/auth/auth.config';
-import { ensureAuthSecretIsNotDefaultInProduction } from '../app/auth/auth.config.models';
+import {
+  ensureAdminAccountConfigIsValid,
+  ensureAuthSecretIsNotDefaultInProduction,
+} from '../app/auth/auth.config.models';
 import { databaseConfig } from '../app/database/database.config';
 import { customPropertiesConfig } from '../custom-properties/custom-properties.config';
 import { documentShareLinksConfig } from '../document-share-links/document-share-links.config';
@@ -230,6 +233,7 @@ export async function parseConfig({
     logger,
     validators: [
       ensureAuthSecretIsNotDefaultInProduction,
+      ensureAdminAccountConfigIsValid,
       ensureIntakeEmailWebhookSecretisSetWhenIntakeEmailsAreEnabled,
     ],
   });

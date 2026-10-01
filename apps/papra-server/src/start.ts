@@ -3,6 +3,7 @@ import type { Config } from './modules/config/config.types';
 import type { Logger } from './modules/shared/logger/logger';
 import { env } from 'node:process';
 import { createAuthEmailsServices } from './modules/app/auth/auth.emails.services';
+import { bootstrapAdminAccount } from './modules/app/auth/auth.admin-account';
 import { getAuth } from './modules/app/auth/auth.services';
 import { setupDatabase } from './modules/app/database/database';
 import { ensureLocalDatabaseDirectoryExists } from './modules/app/database/database.services';
@@ -102,6 +103,7 @@ async function buildServices({ config }: { config: Config }): Promise<GlobalDepe
     webhookTriggerServices,
     documentsStorageService,
   });
+  await bootstrapAdminAccount({ auth, config, db });
 
   return {
     config,

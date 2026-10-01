@@ -67,6 +67,26 @@ export const authConfig = {
     default: true,
     env: 'AUTH_FIRST_USER_AS_ADMIN',
   },
+  adminAccount: {
+    email: {
+      doc: 'Email address for an admin account to create at startup. If the account already exists, it will be granted the admin role without changing its password.',
+      schema: v.optional(v.pipe(v.string(), v.email())),
+      default: undefined,
+      env: 'AUTH_ADMIN_EMAIL',
+    },
+    password: {
+      doc: 'Password for the admin account created at startup. Must be between 8 and 128 characters.',
+      schema: v.optional(v.string()),
+      default: undefined,
+      env: 'AUTH_ADMIN_PASSWORD',
+    },
+    name: {
+      doc: 'Display name for the admin account created at startup.',
+      schema: v.string(),
+      default: 'Admin',
+      env: 'AUTH_ADMIN_NAME',
+    },
+  },
   ipAddressHeaders: {
     doc: `The header, or comma separated list of headers, to use to get the real IP address of the user, use for rate limiting. Make sur to use a non-spoofable header, one set by your proxy.
 - If behind a standard proxy, you might want to set this to "x-forwarded-for".

@@ -82,6 +82,10 @@ export function getAuth({
       user: {
         create: {
           before: async ({ email }) => {
+            if (email.toLowerCase() === config.auth.adminAccount.email?.toLowerCase()) {
+              return;
+            }
+
             if (
               !isEmailDomainAllowed({
                 email,
