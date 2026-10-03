@@ -7,19 +7,6 @@ import { Aside } from '@astrojs/starlight/components';
 
 This guide explains the roles and permissions system in Papra, focusing on platform-wide roles and how to manage admin access.
 
-## Configure an Admin Account
-
-For self-hosted instances, you can create an admin account at startup using environment variables. Set both `AUTH_ADMIN_EMAIL` and `AUTH_ADMIN_PASSWORD`; optionally set `AUTH_ADMIN_NAME` (defaults to `Admin`). The password must be between 8 and 128 characters.
-
-```env
-AUTH_ADMIN_EMAIL=admin@example.com
-AUTH_ADMIN_PASSWORD=replace-with-a-strong-password
-AUTH_ADMIN_NAME=Papra Admin
-AUTH_IS_REGISTRATION_ENABLED=false
-```
-
-The configured account is created with a verified email and receives the platform `admin` role, even when public registration is disabled. If the email already belongs to an account, Papra grants it the admin role without changing its password. Keep the password in a secret manager. If you no longer need startup to manage this account, remove both `AUTH_ADMIN_EMAIL` and `AUTH_ADMIN_PASSWORD` together.
-
 <Aside type="note">
  The administration features are available starting from Papra version `26.0.0`.
 </Aside>
@@ -56,6 +43,22 @@ https://your-papra-instance.com/admin
 ```
 
 Or click on the `Admin` button in the navigation bar (visible only to admins).
+
+## Bootstrap an Admin Account
+
+For self-hosted instances, you can create an admin account at startup using environment variables. Set both `AUTH_ADMIN_EMAIL` and `AUTH_ADMIN_PASSWORD`; optionally set `AUTH_ADMIN_NAME` (defaults to `Admin`). The password must be between 8 and 128 characters.
+
+```env
+AUTH_ADMIN_EMAIL=admin@example.com
+AUTH_ADMIN_PASSWORD=replace-with-a-strong-password
+AUTH_ADMIN_NAME=Papra Admin
+```
+
+The configured account is created with a verified email and receives the platform `admin` role, even when public registration is disabled. 
+
+If the email already belongs to an account, Papra grants it the admin role without changing its password. 
+
+Keep the password in a secret manager. If you no longer need startup to manage this account, remove both `AUTH_ADMIN_EMAIL` and `AUTH_ADMIN_PASSWORD` together.
 
 ## First User as Admin
 
